@@ -31,7 +31,7 @@ public class SseDemoApplication {
     @RequestMapping(path = "/stream", method = RequestMethod.GET)
     public SseEmitter stream() throws IOException {
 
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(600000L);
 
         emitters.add(emitter);
         emitter.onCompletion(() -> emitters.remove(emitter));
@@ -47,10 +47,9 @@ public class SseDemoApplication {
 
         emitters.forEach((SseEmitter emitter) -> {
             try {
-                emitter.send(message, MediaType.APPLICATION_JSON);
+                emitter.send(message );
             } catch (IOException e) {
-                emitter.complete();
-                emitters.remove(emitter);
+                emitter.complete(); 
                 e.printStackTrace();
             }
         });
